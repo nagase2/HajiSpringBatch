@@ -2,6 +2,8 @@ package hello;
 
 import javax.sql.DataSource;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
@@ -25,11 +27,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 @EnableBatchProcessing
+@Slf4j
 public class BatchConfiguration {
 
     // tag::readerwriterprocessor[]
     @Bean
     public ItemReader<Person> reader() {
+      log.info("CSVからデータを読み出します。");
         FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
         reader.setResource(new ClassPathResource("sample-data.csv"));
         reader.setLineMapper(new DefaultLineMapper<Person>() {{
@@ -61,6 +65,7 @@ public class BatchConfiguration {
     // tag::jobstep[]
     @Bean
     public Job importUserJob(JobBuilderFactory jobs, Step s1, JobExecutionListener listener) {
+      
         return jobs.get("importUserJob")
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
@@ -72,6 +77,8 @@ public class BatchConfiguration {
     @Bean
     public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<Person> reader,
             ItemWriter<Person> writer, ItemProcessor<Person, Person> processor) {
+      log.info("テスト　Step1!");
+      
         return stepBuilderFactory.get("step1")
                 .<Person, Person> chunk(10)
                 .reader(reader)

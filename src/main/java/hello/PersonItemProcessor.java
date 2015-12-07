@@ -10,6 +10,8 @@ public class PersonItemProcessor implements ItemProcessor<Person, Person> {
 
    // @Override
     public Person process(final Person person) throws Exception {
+      
+      log.info("取得した名称を大文字にします。");
         final String firstName = person.getFirstName().toUpperCase();
         final String lastName = person.getLastName().toUpperCase();
 
