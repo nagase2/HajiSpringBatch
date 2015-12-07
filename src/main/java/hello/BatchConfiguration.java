@@ -32,30 +32,30 @@ public class BatchConfiguration {
 
     // tag::readerwriterprocessor[]
     @Bean
-    public ItemReader<Person> reader() {
+    public ItemReader<PersonIn> reader() {
       log.info("CSVからデータを読み出します。");
-        FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
+        FlatFileItemReader<PersonIn> reader = new FlatFileItemReader<PersonIn>();
         reader.setResource(new ClassPathResource("sample-data.csv"));
-        reader.setLineMapper(new DefaultLineMapper<Person>() {{
+        reader.setLineMapper(new DefaultLineMapper<PersonIn>() {{
             setLineTokenizer(new DelimitedLineTokenizer() {{
                 setNames(new String[] { "firstName", "lastName" });
             }});
-            setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {{
-                setTargetType(Person.class);
+            setFieldSetMapper(new BeanWrapperFieldSetMapper<PersonIn>() {{
+                setTargetType(PersonIn.class);
             }});
         }});
         return reader;
     }
 
     @Bean
-    public ItemProcessor<Person, Person> processor() {
+    public ItemProcessor<PersonIn, PersonOut> processor() {
         return new PersonItemProcessor();
     }
 
     @Bean
-    public ItemWriter<Person> writer(DataSource dataSource) {
-        JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>();
-        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
+    public ItemWriter<PersonIn> writer(DataSource dataSource) {
+        JdbcBatchItemWriter<PersonIn> writer = new JdbcBatchItemWriter<PersonIn>();
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<PersonIn>());
         writer.setSql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)");
         writer.setDataSource(dataSource);
         return writer;
@@ -75,12 +75,12 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<Person> reader,
-            ItemWriter<Person> writer, ItemProcessor<Person, Person> processor) {
+    public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<PersonIn> reader,
+            ItemWriter<PersonOut> writer, ItemProcessor<PersonIn, PersonOut> processor) {
       log.info("テスト　Step1!");
       
         return stepBuilderFactory.get("step1")
-                .<Person, Person> chunk(10)
+                .<PersonIn, PersonOut> chunk(10)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)

@@ -1,14 +1,14 @@
 package hello;
 
-public class Person {
+public class PersonIn {
     private String lastName;
     private String firstName;
-
-    public Person() {
+    
+    public PersonIn() {
 
     }
 
-    public Person(String firstName, String lastName) {
+    public PersonIn(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }

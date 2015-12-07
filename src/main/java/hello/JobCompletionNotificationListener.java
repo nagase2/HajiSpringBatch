@@ -33,15 +33,15 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 			log.info("ジョブが終了しました。登録されているかどうかをチェックします。");
 
 			log.info("DBからデータを取得");
-			List<Person> results = jdbcTemplate.query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
+			List<PersonIn> results = jdbcTemplate.query("SELECT first_name, last_name FROM people", new RowMapper<PersonIn>() {
 				//@Override
-				public Person mapRow(ResultSet rs, int row) throws SQLException {
-					return new Person(rs.getString(1), rs.getString(2));
+				public PersonIn mapRow(ResultSet rs, int row) throws SQLException {
+					return new PersonIn(rs.getString(1), rs.getString(2));
 				}
 			});
 			
 			log.info("見つけた結果をログに出力");
-			for (Person person : results) {
+			for (PersonIn person : results) {
 				log.info("Found <" + person + "> in the database.");
 			}
 
