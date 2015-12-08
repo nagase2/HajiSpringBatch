@@ -87,7 +87,6 @@ public class BatchConfiguration {
     }
   /*
    * The first method defines the job
-   * 
    */
     @Bean
     public Job importUserJob(JobBuilderFactory jobs, Step s1, JobExecutionListener listener) {
@@ -100,7 +99,6 @@ public class BatchConfiguration {
                 .end()
                 .build();
     }
-
     
     /*
      * the second one defines a single step. Jobs are built from steps, 
@@ -111,7 +109,7 @@ public class BatchConfiguration {
             ItemWriter<PersonOut> writer, ItemProcessor<PersonIn, PersonOut> processor) {
       log.info("テスト　Step1!");
       
-        return stepBuilderFactory.get("step1")
+        return stepBuilderFactory.get("step1") //<-これはなに？
                //In the step definition, you define how much data to write at a time. In this case, it writes up to ten records at a time. 
                 .<PersonIn, PersonOut> chunk(10)
                 .reader(reader)
@@ -119,7 +117,21 @@ public class BatchConfiguration {
                 .writer(writer)
                 .build();
     }
-    // end::jobstep[]
+    
+//    @Bean
+//    public Step step2(StepBuilderFactory stepBuilderFactory, ItemReader<PersonIn> reader,
+//            ItemWriter<PersonOut> writer, ItemProcessor<PersonIn, PersonOut> processor) {
+//      log.info("テスト　Step2");
+//      
+//        return stepBuilderFactory.get("step2") //<-これはなに？
+//               //In the step definition, you define how much data to write at a time. In this case, it writes up to ten records at a time. 
+//                .<PersonIn, PersonOut> chunk(10)
+//                .reader(reader)
+//                .processor(processor)
+//                .writer(writer)
+//                .build();
+//    }
+    
     /*
      * For demonstration purposes, there is code to create a JdbcTemplate, 
      * query the database, and print out the names of people the batch job inserts.

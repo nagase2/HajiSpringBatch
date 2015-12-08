@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 
 /**
+ * intermediate processor
  * Transformerクラス
  * @author ac12955
  *
