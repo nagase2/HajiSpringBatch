@@ -26,7 +26,10 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	
+	/**
+	 * This code listens for when a job is BatchStatus.COMPLETED, 
+	 * and then uses JdbcTemplate to inspect the results.
+	 */
 	@Override
 	public void afterJob(JobExecution jobExecution) {
 		if(jobExecution.getStatus() == BatchStatus.COMPLETED) {
