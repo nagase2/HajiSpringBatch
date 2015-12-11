@@ -1,5 +1,6 @@
 package hello;
 
+import javax.batch.runtime.StepExecution;
 import javax.sql.DataSource;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.repeat.RepeatStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -28,6 +31,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 /**
  * どうやってJobやReaderなどが関連付けられているのか？
  * どうやったら、Jobを追加できるのか？
+ * このページが非常に参考になる。
+ * http://kagamihoge.hatenablog.com/entry/2015/02/14/144238
  */
 /**
  * For starters, the @EnableBatchProcessing annotation adds many critical beans that support jobs and saves you a lot of leg work. 
@@ -37,7 +42,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @Configuration
 @EnableBatchProcessing
 @Slf4j
-public class BatchConfiguration {
+public class BatchConfiguration2 {
+  
+
+//  @Autowired
+//  private JobBuilderFactory jobs;
+  
+  @Autowired
+  private StepBuilderFactory steps;
   
   /*
    *  The first chunk of code defines the input, processor, and output.
@@ -108,20 +120,33 @@ public class BatchConfiguration {
     
   /*
    * The first method defines the job
+   * Jobはうえから順番に実行される。
    */
-    @Bean
+    @Bean(name="job1")
     public Job importUserJob(JobBuilderFactory jobs, Step s1,Step s2,JobExecutionListener listener) {
-      
+      log.info("job1を開始");
         return jobs.get("importUserJob")
                 .incrementer(new RunIdIncrementer())
                 //The listener() method lets you hook into the engine and detect when the job is complete, triggering the verification of results.
                 .listener(listener)
-//                .flow(s1)
-//                .end()
                 .start(s1)
                 .next(s2)
                 .build();
     }
+    @Bean(name="job2")
+    public Job importUserJob2(JobBuilderFactory jobs, Step s1,Step s2,JobExecutionListener listener) {
+       log.info("job2を開始");
+        return jobs.get("２番めのJob")
+                .incrementer(new RunIdIncrementer())
+                //The listener() method lets you hook into the engine and detect when the job is complete, triggering the verification of results.
+                .listener(listener)
+                .start(s1)
+                .next(s2)   //引数から呼んでも良い。
+                .next(step3()) //メソッドを直接呼んでも良い。
+                .build();
+    }
+ 
+
     
     /*
      * the second one defines a single step. Jobs are built from steps, 
@@ -153,6 +178,15 @@ public class BatchConfiguration {
                 .processor(ip2)
                 .writer(iw2)
                 .build();
+    }
+    
+    @Bean(name = "s3")
+    public Step step3() {
+        return steps.get("step3").tasklet((stepContribution, chunkContext) -> {
+            System.out.println("step 3333333333333");
+            
+            return RepeatStatus.FINISHED;
+        }).build();
     }
     
     /*
