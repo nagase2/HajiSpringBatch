@@ -24,11 +24,20 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+
 dependencies {
     compile 'org.projectlombok:maven-lombok-plugin:0.9.3.1'
     compile "org.projectlombok:lombok:1.16.2"
     compile("org.springframework.boot:spring-boot-starter-batch")
+	compile "commons-collections:commons-collections:3.2.1"
+	compile "commons-dbcp:commons-dbcp:1.4"
     compile("org.hsqldb:hsqldb")
+	compile "org.springframework:spring-jdbc:4.0.5.RELEASE"
+	compile "org.springframework:spring-jms"
+	compile "org.springframework:spring-orm"
+	
+	compile "postgresql:postgresql:9.0-801.jdbc4"
+	
     testCompile("junit:junit")
 }
 
