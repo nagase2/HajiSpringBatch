@@ -2,6 +2,8 @@ package hello;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import simplestbatch.SimpleBatchConfigration;
 /**
  * Build an executable JAR:
  * If you are using Gradle, you can run the application using ./gradlew bootRun.
@@ -38,4 +40,11 @@ public class Application {
   public static void main(String[] args) throws Exception {
     SpringApplication.run(Application.class, args);
   }
+  
+  
+//  public static void main(String [] args) {
+//    System.exit(SpringApplication.exit(SpringApplication.run(
+//        SimpleBatchConfigration.class, args)));
+//    
+//  }
 }
