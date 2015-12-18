@@ -1,10 +1,8 @@
 package hello;
 
-import javax.batch.runtime.StepExecution;
 import javax.sql.DataSource;
 
-import lombok.extern.slf4j.Slf4j;
-
+import org.slf4j.Logger;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
@@ -41,7 +39,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 @Configuration
 @EnableBatchProcessing
-@Slf4j
 public class BatchConfiguration2 {
   
 
@@ -50,6 +47,8 @@ public class BatchConfiguration2 {
   
   @Autowired
   private StepBuilderFactory steps;
+  
+  private static final Logger log = org.slf4j.LoggerFactory.getLogger(BatchConfiguration2.class);
   
   /*
    *  The first chunk of code defines the input, processor, and output.
@@ -69,7 +68,7 @@ public class BatchConfiguration2 {
      */
     @Bean
     public ItemReader<PersonIn> reader() {
-      log.info("CSVからデータを読み出します。");
+      log.info("Readerが生成されました");
         FlatFileItemReader<PersonIn> reader = new FlatFileItemReader<PersonIn>();
         reader.setResource(new ClassPathResource("sample-data.csv"));
         reader.setLineMapper(new DefaultLineMapper<PersonIn>() {{
@@ -91,7 +90,7 @@ public class BatchConfiguration2 {
     @Bean(name="ip2")
     public ItemProcessor<PersonIn, PersonOut> processor2() {
       log.info("Item Processesor2が呼ばれませした ");
-      return new PersonItemProcessor();
+      return new PersonItemProcessor2();
     }
     
     /**
@@ -120,7 +119,10 @@ public class BatchConfiguration2 {
     
   /*
    * The first method defines the job
-   * Jobはうえから順番に実行される。
+   * Jobはうえから順番に実行される。（xxxxxx
+   * Q:どうやって、JobBuilderFactoryとか、Stepに引数が渡されるのですか？
+   * A:JobExecutionListenerとJobBuilderは＠EnableBatchProcessingが解釈された時、Stepはメソッドに書かれている＠Beanにより、スキャンの対象となります。
+   * メソッドが呼ばれた時に、対象のオブジェクトが自動的にセットされます。nameが設定されている場合、引数の変数名と一致しているものを取得する仕様となっています。
    */
     @Bean(name="job1")
     public Job importUserJob(JobBuilderFactory jobs, Step s1,Step s2,JobExecutionListener listener) {
@@ -167,11 +169,11 @@ public class BatchConfiguration2 {
     }
     
     @Bean(name="s2")
-    public Step step2(StepBuilderFactory stepBuilderFactory, ItemReader<PersonIn> reader,
+    public Step step2(StepBuilderFactory stepBuilderFactory2, ItemReader<PersonIn> reader,
             ItemWriter<PersonOut> iw2, ItemProcessor<PersonIn, PersonOut> ip2) {
       log.info("テスト　Step2が呼ばれました。");
       
-        return stepBuilderFactory.get("step2") //<-これはなに？
+        return stepBuilderFactory2.get("step2") //<-これはなに？
                //In the step definition, you define how much data to write at a time. In this case, it writes up to ten records at a time. 
                 .<PersonIn, PersonOut> chunk(10)
                 .reader(reader)
@@ -183,7 +185,7 @@ public class BatchConfiguration2 {
     @Bean(name = "s3")
     public Step step3() {
         return steps.get("step3").tasklet((stepContribution, chunkContext) -> {
-            System.out.println("step 3333333333333");
+            System.out.println("step３ が実行");
             
             return RepeatStatus.FINISHED;
         }).build();

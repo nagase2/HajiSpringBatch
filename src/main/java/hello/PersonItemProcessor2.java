@@ -10,14 +10,14 @@ import org.springframework.batch.item.ItemProcessor;
  * @author ac12955
  *
  */
-public class PersonItemProcessor implements ItemProcessor<PersonIn, PersonOut> {
+public class PersonItemProcessor2 implements ItemProcessor<PersonIn, PersonOut> {
 
-    private static final Logger log = LoggerFactory.getLogger(PersonItemProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(PersonItemProcessor2.class);
 
    // @Override
     public PersonOut process(final PersonIn person) throws Exception {
       
-      log.info("Job1のプロセッサー実行中。");
+      log.info("Job２のプロセッサー実行中。");
         final String firstName = person.getFirstName().toUpperCase();
         final String lastName = person.getLastName().toUpperCase();
 
