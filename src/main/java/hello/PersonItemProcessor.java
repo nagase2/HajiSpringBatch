@@ -17,7 +17,7 @@ public class PersonItemProcessor implements ItemProcessor<PersonIn, PersonOut> {
    // @Override
     public PersonOut process(final PersonIn person) throws Exception {
       
-      log.info("Job1のプロセッサー実行中。");
+      log.info("Step1のプロセッサー実行中。");
         final String firstName = person.getFirstName().toUpperCase();
         final String lastName = person.getLastName().toUpperCase();
 

@@ -11,6 +11,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
+apply plugin: 'application'
 
 jar {
     baseName = 'gs-batch-processing'
@@ -20,17 +21,18 @@ jar {
 repositories {
     mavenCentral()
 }
-
+mainClassName = "org.springframework.batch.core.launch.support.CommandLineJobRunner"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
    // compile "org.springframework.batch:spring-batch-admin-manager:1.3.1.RELEASE"
    // compile "org.springframework.batch:spring-batch-admin-resources:1.3.1.RELEASE"
+	compile("org.springframework.boot:spring-boot-starter-batch")
+	compile("org.springframework.boot:spring-boot-starter-web")
    
     compile 'org.projectlombok:maven-lombok-plugin:0.9.3.1'
     compile "org.projectlombok:lombok:1.16.2"
-    compile("org.springframework.boot:spring-boot-starter-batch")
 	compile "commons-collections:commons-collections:3.2.1"
 	compile "commons-dbcp:commons-dbcp:1.4"
     compile("org.hsqldb:hsqldb")

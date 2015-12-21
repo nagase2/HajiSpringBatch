@@ -14,10 +14,10 @@ public class PersonItemProcessor2 implements ItemProcessor<PersonIn, PersonOut> 
 
     private static final Logger log = LoggerFactory.getLogger(PersonItemProcessor2.class);
 
-   // @Override
+   @Override
     public PersonOut process(final PersonIn person) throws Exception {
       
-      log.info("Job２のプロセッサー実行中。");
+      log.info("Step2のプロセッサー実行中。");
         final String firstName = person.getFirstName().toUpperCase();
         final String lastName = person.getLastName().toUpperCase();
 

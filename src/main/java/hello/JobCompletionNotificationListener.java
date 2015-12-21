@@ -45,7 +45,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 			
 			log.info("見つけた結果をログに出力");
 			for (PersonIn person : results) {
-				log.info("Found <" + person + "> in the database.");
+				//log.info("Found <" + person + "> in the database.");
 			}
 
 		}

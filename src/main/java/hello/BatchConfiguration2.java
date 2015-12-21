@@ -23,6 +23,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -39,12 +40,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 @Configuration
 @EnableBatchProcessing
+@Import(DataSourceConfiguration.class)
 public class BatchConfiguration2 {
-  
 
-//  @Autowired
-//  private JobBuilderFactory jobs;
-  
   @Autowired
   private StepBuilderFactory steps;
   
@@ -126,8 +124,8 @@ public class BatchConfiguration2 {
    */
     @Bean(name="job1")
     public Job importUserJob(JobBuilderFactory jobs, Step s1,Step s2,JobExecutionListener listener) {
-      log.info("job1を開始");
-        return jobs.get("importUserJob")
+      log.info("-------------------job1を開始--------------------------------");
+        return jobs.get("job1")
                 .incrementer(new RunIdIncrementer())
                 //The listener() method lets you hook into the engine and detect when the job is complete, triggering the verification of results.
                 .listener(listener)
@@ -137,18 +135,26 @@ public class BatchConfiguration2 {
     }
     @Bean(name="job2")
     public Job importUserJob2(JobBuilderFactory jobs, Step s1,Step s2,JobExecutionListener listener) {
-       log.info("job2を開始");
-        return jobs.get("２番めのJob")
+       log.info("------------job2を開始------------------------------------");
+        return jobs.get("job2")
                 .incrementer(new RunIdIncrementer())
                 //The listener() method lets you hook into the engine and detect when the job is complete, triggering the verification of results.
                 .listener(listener)
-                .start(s1)
-                .next(s2)   //引数から呼んでも良い。
-                .next(step3()) //メソッドを直接呼んでも良い。
+                .start(step3())
+                .next(step4())   //引数から呼んでも良い。
+                //.next(step3()) //メソッドを直接呼んでも良い。
                 .build();
     }
  
 
+    @Bean
+    public String createStr(){
+    	return "fixedName";
+    }
+    @Bean(name="fixedStr")
+    public String createStr2(){
+    	return "fixedName";
+    }
     
     /*
      * the second one defines a single step. Jobs are built from steps, 
@@ -156,8 +162,8 @@ public class BatchConfiguration2 {
      */
     @Bean(name="s1")
     public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<PersonIn> reader,
-            ItemWriter<PersonOut> iw1, ItemProcessor<PersonIn, PersonOut> ip1) {
-      log.info("テスト　Step1!が呼ばれました。");
+            ItemWriter<PersonOut> iw1, ItemProcessor<PersonIn, PersonOut> ip1,String fixedStr) {
+      log.info("テスト　Step1!が呼ばれました。"+fixedStr);
       
         return stepBuilderFactory.get("step1") //<-これはなに？
                //In the step definition, you define how much data to write at a time. In this case, it writes up to ten records at a time. 
@@ -185,7 +191,15 @@ public class BatchConfiguration2 {
     @Bean(name = "s3")
     public Step step3() {
         return steps.get("step3").tasklet((stepContribution, chunkContext) -> {
-            System.out.println("step３ が実行");
+            System.out.println("step３ が実行(job2)");
+            
+            return RepeatStatus.FINISHED;
+        }).build();
+    }
+    @Bean(name = "s4")
+    public Step step4() {
+        return steps.get("step4").tasklet((stepContribution, chunkContext) -> {
+            System.out.println("step4 が実行(job2)");
             
             return RepeatStatus.FINISHED;
         }).build();

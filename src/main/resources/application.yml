@@ -1,5 +1,8 @@
 #この設定をfalseにすることで、起動時にJobが実行されなくなる。
-spring.batch.job.enabled: true
+spring.batch.job.enabled: false
 
 #複数指定したい場合はカンマで指定
 #spring.batch.job.names: job2
+
+mainClass: org.springframework.batch.core.launch.support.CommandLineJobRunner
+exec.mainClass: org.springframework.batch.core.launch.support.CommandLineJobRunner
