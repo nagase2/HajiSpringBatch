@@ -62,5 +62,7 @@ public class AppWeb {
 	  
 	  //こっちはWeb起動用（プロセスが起動したままになる）
 	  //SpringApplication.run(AppWeb.class, args);
+	  
+	  System.out.println("-----------------main終了-----------------------");
 	}
 }

@@ -21,7 +21,8 @@ jar {
 repositories {
     mavenCentral()
 }
-mainClassName = "org.springframework.batch.core.launch.support.CommandLineJobRunner"
+//mainClassName = "org.springframework.batch.core.launch.support.CommandLineJobRunner"
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
