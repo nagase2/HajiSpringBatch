@@ -124,7 +124,7 @@ public class BatchConfiguration2 {
    */
     @Bean(name="job1")
     public Job importUserJob(JobBuilderFactory jobs, Step s1,Step s2,JobExecutionListener listener) {
-      log.info("-------------------job1を開始--------------------------------");
+      log.info("-------------------job1を生成--------------------------------");
         return jobs.get("job1")
                 .incrementer(new RunIdIncrementer())
                 //The listener() method lets you hook into the engine and detect when the job is complete, triggering the verification of results.
@@ -135,7 +135,7 @@ public class BatchConfiguration2 {
     }
     @Bean(name="job2")
     public Job importUserJob2(JobBuilderFactory jobs, Step s1,Step s2,JobExecutionListener listener) {
-       log.info("------------job2を開始------------------------------------");
+       log.info("------------job2を生成------------------------------------");
         return jobs.get("job2")
                 .incrementer(new RunIdIncrementer())
                 //The listener() method lets you hook into the engine and detect when the job is complete, triggering the verification of results.
