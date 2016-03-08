@@ -27,7 +27,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 	}
 
 	/**
-	 * This code listens for when a job is BatchStatus.COMPLETED, 
+	 * This code listens for when a job is BathStatus.COMPLETED, 
 	 * and then uses JdbcTemplate to inspect the results.
 	 */
 	@Override

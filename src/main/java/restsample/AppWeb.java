@@ -1,4 +1,4 @@
-package hello;
+package restsample;
 
 import java.util.HashMap;
 import java.util.Map;
